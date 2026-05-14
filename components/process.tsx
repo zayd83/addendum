@@ -1,7 +1,8 @@
 'use client'
 
 import { MessageCircle, MapPin, Wrench } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { fadeUp, stagger, staggerItem, VIEWPORT } from '@/lib/animations'
 
 const steps = [
   {
@@ -25,27 +26,8 @@ const steps = [
 ]
 
 export function Process() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const lineRef = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.2 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
-
   return (
     <section
-      ref={sectionRef}
       id="werkwijze"
       className="relative bg-warm-white py-20 md:py-28"
       aria-labelledby="process-heading"
@@ -56,10 +38,12 @@ export function Process() {
       <div className="relative mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
 
         {/* Section header */}
-        <div
-          className={`mb-16 md:mb-20 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-          }`}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT}
+          className="mb-16 md:mb-20"
         >
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand-cyan">
             Onze werkwijze
@@ -71,56 +55,58 @@ export function Process() {
           >
             Zo werken wij
           </h2>
-        </div>
+        </motion.div>
 
         {/* Steps */}
         <div className="relative">
 
-          {/* Connecting line (desktop) */}
+          {/* Connecting line — track + animated fill (desktop only) */}
           <div
             className="absolute left-0 right-0 top-8 hidden md:block"
-            style={{ zIndex: 0 }}
             aria-hidden="true"
           >
             <div className="mx-auto max-w-2xl">
               {/* Track */}
               <div className="h-px w-full bg-border" />
-              {/* Animated fill */}
-              <div
-                ref={lineRef}
-                className="relative -top-px h-px bg-brand-cyan transition-none"
-                style={{
-                  width: isVisible ? '100%' : '0%',
-                  transition: isVisible ? 'width 0.9s ease-out 0.4s' : 'none',
-                }}
+              {/* Animated draw */}
+              <motion.div
+                className="relative -top-px h-px origin-left bg-brand-cyan"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 1.0, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
               />
             </div>
           </div>
 
           {/* Step cards */}
-          <div className="grid gap-10 md:grid-cols-3 md:gap-8">
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            className="grid gap-10 md:grid-cols-3 md:gap-8"
+          >
             {steps.map((step, index) => {
               const Icon = step.icon
               return (
-                <div
+                <motion.div
                   key={index}
-                  className={`relative flex flex-col transition-all duration-700 ${
-                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                  style={{ transitionDelay: `${(index + 1) * 150}ms` }}
+                  variants={staggerItem}
+                  className="relative flex flex-col"
                 >
                   {/* Step indicator */}
                   <div className="relative z-10 flex items-center gap-4 md:flex-col md:items-start">
                     {/* Circle with icon */}
-                    <div
-                      className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 bg-warm-white transition-colors duration-300 ${
-                        isVisible ? 'border-brand-cyan' : 'border-border'
-                      }`}
+                    <motion.div
+                      className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-brand-cyan bg-warm-white"
+                      whileHover={{ scale: 1.08, borderColor: '#22D3EE' }}
+                      transition={{ duration: 0.2 }}
                     >
                       <Icon className="h-6 w-6 text-brand-cyan" strokeWidth={1.5} />
-                    </div>
+                    </motion.div>
 
-                    {/* Mobile: step number inline */}
+                    {/* Mobile: inline step number */}
                     <span
                       className="font-mono-brand text-4xl font-bold leading-none text-border md:hidden"
                       aria-hidden="true"
@@ -144,10 +130,10 @@ export function Process() {
                       {step.description}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               )
             })}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

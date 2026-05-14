@@ -2,29 +2,12 @@
 
 import { MessageCircle, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { fadeUp, ease, VIEWPORT } from '@/lib/animations'
 
 export function ContactCta() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
-
   return (
     <section
-      ref={sectionRef}
       id="contact"
       className="relative overflow-hidden bg-midnight py-24 md:py-32"
       aria-labelledby="contact-heading"
@@ -48,31 +31,37 @@ export function ContactCta() {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto max-w-3xl px-4 text-center md:px-6">
-        <div
-          className={`transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-          }`}
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={VIEWPORT}
+        className="relative mx-auto max-w-3xl px-4 text-center md:px-6"
+      >
+        {/* Label */}
+        <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-brand-cyan">
+          Direct contact
+        </p>
+
+        <h2
+          id="contact-heading"
+          className="font-heading text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-5xl"
+          style={{ letterSpacing: '-0.02em' }}
         >
-          {/* Label */}
-          <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-brand-cyan">
-            Direct contact
-          </p>
+          Klaar om te starten?
+        </h2>
 
-          <h2
-            id="contact-heading"
-            className="font-heading text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-5xl"
-            style={{ letterSpacing: '-0.02em' }}
+        <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-white/60">
+          Stuur een appje en wij denken vrijblijvend met u mee. Reactie binnen 24 uur.
+        </p>
+
+        {/* CTA button with hover animation */}
+        <div className="mt-10">
+          <motion.div
+            whileHover={{ scale: 1.03, transition: { duration: 0.2, ease } }}
+            whileTap={{ scale: 0.97 }}
+            className="inline-block"
           >
-            Klaar om te starten?
-          </h2>
-
-          <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-white/60">
-            Stuur een appje en wij denken vrijblijvend met u mee. Reactie binnen 24 uur.
-          </p>
-
-          {/* CTA button */}
-          <div className="mt-10">
             <Button
               asChild
               size="lg"
@@ -83,15 +72,15 @@ export function ContactCta() {
                 App ons: 06 24 78 28 34
               </a>
             </Button>
-          </div>
-
-          {/* Trust badge */}
-          <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/50 backdrop-blur-sm">
-            <MapPin className="h-3.5 w-3.5 text-brand-cyan" />
-            Werkgebied: Nijmegen, Arnhem en heel Gelderland
-          </div>
+          </motion.div>
         </div>
-      </div>
+
+        {/* Trust badge */}
+        <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/50 backdrop-blur-sm">
+          <MapPin className="h-3.5 w-3.5 text-brand-cyan" />
+          Werkgebied: Nijmegen, Arnhem en heel Gelderland
+        </div>
+      </motion.div>
     </section>
   )
 }

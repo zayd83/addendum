@@ -2,32 +2,20 @@
 
 import { MessageCircle, ChevronDown, Shield, Wifi, Video, Bell, Radio } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useEffect, useRef, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
+import { fadeUp, slideRight, ease, VIEWPORT } from '@/lib/animations'
 
 const badges = [
-  { label: 'WiFi Actief',     icon: Wifi,   pos: 'top-4 left-4',     delay: '0.4s' },
-  { label: 'Camera Online',   icon: Video,  pos: 'top-4 right-4',    delay: '0.6s' },
-  { label: 'Alarm Bewaakt',   icon: Bell,   pos: 'bottom-4 left-4',  delay: '0.8s' },
-  { label: 'Verbonden',       icon: Radio,  pos: 'bottom-4 right-4', delay: '1.0s' },
+  { label: 'WiFi Actief',    icon: Wifi,   pos: 'top-4 left-4',     delay: '0.5s' },
+  { label: 'Camera Online',  icon: Video,  pos: 'top-4 right-4',    delay: '0.7s' },
+  { label: 'Alarm Bewaakt',  icon: Bell,   pos: 'bottom-4 left-4',  delay: '0.9s' },
+  { label: 'Verbonden',      icon: Radio,  pos: 'bottom-4 right-4', delay: '1.1s' },
 ]
 
 export function Hero() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
+  const cardRef = useRef<HTMLDivElement>(null)
+  const badgesVisible = useInView(cardRef, { once: true, margin: '-40px' })
 
   return (
     <>
@@ -40,12 +28,11 @@ export function Hero() {
           from { opacity: 0; transform: translateY(8px) scale(0.96); }
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .animate-float   { animation: float 6s ease-in-out infinite; }
-        .badge-animate   { opacity: 0; animation: badge-in 0.45s ease forwards; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .badge-animate { opacity: 0; animation: badge-in 0.45s ease forwards; }
       `}</style>
 
       <section
-        ref={sectionRef}
         className="relative overflow-hidden bg-warm-white py-16 md:py-20 lg:py-28"
         aria-labelledby="hero-heading"
       >
@@ -63,10 +50,12 @@ export function Hero() {
           <div className="grid items-center gap-12 lg:grid-cols-[3fr_2fr] lg:gap-20">
 
             {/* ── Left: Content ── */}
-            <div
-              className={`flex flex-col items-start transition-all duration-700 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              }`}
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={VIEWPORT}
+              className="flex flex-col items-start"
             >
               {/* Status badge */}
               <div className="mb-6 flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 shadow-sm">
@@ -98,16 +87,18 @@ export function Hero() {
 
               {/* CTAs */}
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-                <Button
-                  asChild
-                  size="lg"
-                  className="btn-cyan-glow gap-2 bg-brand-cyan px-8 font-semibold text-midnight hover:bg-brand-cyan-bright"
-                >
-                  <a href="https://wa.me/31624782834" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="h-5 w-5" />
-                    WhatsApp ons direct
-                  </a>
-                </Button>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button
+                    asChild
+                    size="lg"
+                    className="btn-cyan-glow gap-2 bg-brand-cyan px-8 font-semibold text-midnight hover:bg-brand-cyan-bright"
+                  >
+                    <a href="https://wa.me/31624782834" target="_blank" rel="noopener noreferrer">
+                      <MessageCircle className="h-5 w-5" />
+                      WhatsApp ons direct
+                    </a>
+                  </Button>
+                </motion.div>
                 <Button
                   asChild
                   variant="outline"
@@ -132,13 +123,16 @@ export function Hero() {
                   Beoordeeld door klanten in heel Gelderland
                 </span>
               </div>
-            </div>
+            </motion.div>
 
             {/* ── Right: Camera card ── */}
-            <div
-              className={`relative flex items-center justify-center transition-all duration-700 delay-200 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              }`}
+            <motion.div
+              ref={cardRef}
+              variants={slideRight}
+              initial="hidden"
+              whileInView="visible"
+              viewport={VIEWPORT}
+              className="relative flex items-center justify-center"
             >
               {/* Outer ambient glow */}
               <div
@@ -176,18 +170,12 @@ export function Hero() {
                     <Shield className="h-36 w-36 text-white/[0.07]" strokeWidth={1} />
                   </div>
 
-                  {/* Cyan ring accent */}
-                  <div
-                    className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-cyan/20"
-                    aria-hidden="true"
-                  />
-                  <div
-                    className="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-cyan/10"
-                    aria-hidden="true"
-                  />
+                  {/* Cyan ring accents */}
+                  <div className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-cyan/20" aria-hidden="true" />
+                  <div className="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-cyan/10" aria-hidden="true" />
 
-                  {/* Status badges */}
-                  {isVisible && badges.map(({ label, icon: Icon, pos, delay }) => (
+                  {/* Status badges — appear after card is in view */}
+                  {badgesVisible && badges.map(({ label, icon: Icon, pos, delay }) => (
                     <div
                       key={label}
                       className={`badge-animate absolute ${pos} flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-sm`}
@@ -211,7 +199,7 @@ export function Hero() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
           </div>
         </div>

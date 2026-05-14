@@ -3,7 +3,8 @@
 import { MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { fadeUp, staggerFast, staggerItem, ease, VIEWPORT } from '@/lib/animations'
 
 const products = [
   {
@@ -45,26 +46,8 @@ const products = [
 ]
 
 export function Products() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
-
   return (
     <section
-      ref={sectionRef}
       id="producten"
       className="relative bg-midnight py-20 md:py-28"
       aria-labelledby="products-heading"
@@ -72,7 +55,7 @@ export function Products() {
       {/* Dot pattern overlay */}
       <div className="pointer-events-none absolute inset-0 dot-pattern" aria-hidden="true" />
 
-      {/* Top section glow */}
+      {/* Top glow */}
       <div
         className="pointer-events-none absolute left-1/2 top-0 h-64 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
         style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%)' }}
@@ -82,10 +65,12 @@ export function Products() {
       <div className="relative mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
 
         {/* Section header */}
-        <div
-          className={`mb-12 md:mb-16 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-          }`}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT}
+          className="mb-12 md:mb-16"
         >
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand-cyan">
             Direct te bestellen
@@ -100,27 +85,32 @@ export function Products() {
           <p className="mt-3 max-w-md text-lg text-white/60">
             Hoogwaardige camera&apos;s en alarmsystemen — bestel eenvoudig via WhatsApp.
           </p>
-        </div>
+        </motion.div>
 
         {/* Product grid */}
-        <div className="grid gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
+        <motion.div
+          variants={staggerFast}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT}
+          className="grid gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-4"
+        >
           {products.map((product, index) => {
             const whatsappMessage = encodeURIComponent(`Hallo, ik heb interesse in de ${product.name}`)
             const whatsappUrl = `https://wa.me/31624782834?text=${whatsappMessage}`
 
             return (
-              <article
+              <motion.article
                 key={index}
-                className={`group relative transition-all duration-700 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                } ${product.featured ? 'sm:col-span-2 lg:col-span-1' : ''}`}
-                style={{ transitionDelay: `${(index + 1) * 100}ms` }}
+                variants={staggerItem}
+                whileHover={{ y: -6, transition: { duration: 0.2, ease } }}
+                className={product.featured ? 'sm:col-span-2 lg:col-span-1' : ''}
               >
                 <div
-                  className={`relative h-full overflow-hidden rounded-2xl border transition-all duration-300 group-hover:-translate-y-1 ${
+                  className={`relative h-full overflow-hidden rounded-2xl border transition-shadow duration-300 ${
                     product.featured
-                      ? 'border-brand-cyan/40 bg-midnight-mid group-hover:border-brand-cyan/70 group-hover:shadow-[0_0_32px_rgba(6,182,212,0.15)]'
-                      : 'border-white/10 bg-white/5 group-hover:border-white/20 group-hover:shadow-[0_0_24px_rgba(6,182,212,0.08)]'
+                      ? 'border-brand-cyan/40 bg-midnight-mid hover:border-brand-cyan/70 hover:shadow-[0_0_32px_rgba(6,182,212,0.15)]'
+                      : 'border-white/10 bg-white/5 hover:border-white/20 hover:shadow-[0_0_24px_rgba(6,182,212,0.08)]'
                   }`}
                 >
                   {/* Badge */}
@@ -137,12 +127,7 @@ export function Products() {
                   )}
 
                   {/* Product image */}
-                  <div
-                    className={`relative w-full overflow-hidden ${
-                      product.featured ? 'aspect-[4/3]' : 'aspect-[4/3]'
-                    } bg-white/5`}
-                  >
-                    {/* Hover glow on image */}
+                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-white/5">
                     <div
                       className="absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                       style={{ background: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)' }}
@@ -152,7 +137,7 @@ export function Products() {
                       src={product.image}
                       alt={product.alt}
                       fill
-                      className="object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
+                      className="object-contain p-4 transition-transform duration-500 hover:scale-[1.03]"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
                   </div>
@@ -192,10 +177,10 @@ export function Products() {
                     </Button>
                   </div>
                 </div>
-              </article>
+              </motion.article>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

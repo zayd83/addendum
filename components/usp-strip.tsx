@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { motion, useInView, animate } from 'framer-motion'
+import { useRef, useEffect, useState } from 'react'
+import { stagger, staggerItem, VIEWPORT } from '@/lib/animations'
 
 // TODO: Vervang door echte cijfers van klant
 const stats = [
@@ -10,27 +12,37 @@ const stats = [
   { value: '5.0',  label: 'Gemiddelde beoordeling' },
 ]
 
-export function UspStrip() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
+function CountUp({ raw }: { raw: string }) {
+  const numeric  = parseFloat(raw.replace(/[^0-9.]/g, ''))
+  const suffix   = raw.replace(/[0-9.]/g, '')
+  const decimals = raw.includes('.') ? 1 : 0
+
+  const ref       = useRef<HTMLSpanElement>(null)
+  const isInView  = useInView(ref, { once: true, margin: '-50px' })
+  const [display, setDisplay] = useState(decimals ? '0.0' : '0')
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
+    if (!isInView) return
+    const controls = animate(0, numeric, {
+      duration: 1.6,
+      ease: 'easeOut',
+      onUpdate(v) {
+        setDisplay(decimals ? v.toFixed(decimals) : Math.floor(v).toString())
       },
-      { threshold: 0.1 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
+    })
+    return controls.stop
+  }, [isInView, numeric, decimals])
 
   return (
+    <span ref={ref} className="tabular-nums">
+      {display}{suffix}
+    </span>
+  )
+}
+
+export function UspStrip() {
+  return (
     <section
-      ref={sectionRef}
       className="relative bg-midnight py-12 md:py-14"
       aria-label="Kerncijfers"
     >
@@ -47,27 +59,33 @@ export function UspStrip() {
       />
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-y-10 md:grid-cols-4">
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT}
+          className="grid grid-cols-2 gap-y-10 md:grid-cols-4"
+        >
           {stats.map((stat, index) => (
-            <div
+            <motion.div
               key={index}
-              className={`flex flex-col items-center gap-2 text-center transition-all duration-500 ${
+              variants={staggerItem}
+              className={`flex flex-col items-center gap-2 text-center ${
                 index < stats.length - 1 ? 'md:border-r md:border-white/10' : ''
-              } ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-              style={{ transitionDelay: `${index * 80}ms` }}
+              }`}
             >
               <span
-                className="font-mono-brand text-4xl font-bold leading-none tracking-tight text-brand-cyan md:text-5xl"
+                className="font-mono-brand text-4xl font-bold leading-none text-brand-cyan md:text-5xl"
                 style={{ letterSpacing: '-0.03em' }}
               >
-                {stat.value}
+                <CountUp raw={stat.value} />
               </span>
               <span className="text-xs font-medium uppercase tracking-widest text-white/50">
                 {stat.label}
               </span>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       {/* Bottom cyan accent line */}

@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { fadeUp, slideLeft, stagger, staggerItem, VIEWPORT } from '@/lib/animations'
 
 const reviews = [
   {
@@ -37,29 +38,11 @@ function Stars({ count }: { count: number }) {
 }
 
 export function Reviews() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
-
-  const featured = reviews.find((r) => r.featured)!
-  const secondary = reviews.filter((r) => !r.featured)
+  const featured   = reviews.find((r) => r.featured)!
+  const secondary  = reviews.filter((r) => !r.featured)
 
   return (
     <section
-      ref={sectionRef}
       className="relative bg-midnight py-20 md:py-28"
       aria-labelledby="reviews-heading"
     >
@@ -69,10 +52,12 @@ export function Reviews() {
       <div className="relative mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
 
         {/* Section header */}
-        <div
-          className={`mb-12 md:mb-16 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-          }`}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT}
+          className="mb-12 md:mb-16"
         >
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand-cyan">
             Klantbeoordelingen
@@ -84,17 +69,18 @@ export function Reviews() {
           >
             Wat klanten zeggen
           </h2>
-        </div>
+        </motion.div>
 
         {/* Layout: featured large + two compact */}
         <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
 
-          {/* ── Featured review (spans 2 cols on lg) ── */}
-          <article
-            className={`relative overflow-hidden rounded-2xl border border-brand-cyan/25 bg-midnight-mid transition-all duration-700 lg:col-span-2 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-            style={{ transitionDelay: '100ms' }}
+          {/* ── Featured review ── */}
+          <motion.article
+            variants={slideLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            className="relative overflow-hidden rounded-2xl border border-brand-cyan/25 bg-midnight-mid lg:col-span-2"
           >
             {/* Corner glow */}
             <div
@@ -126,17 +112,22 @@ export function Reviews() {
                 </footer>
               </div>
             </div>
-          </article>
+          </motion.article>
 
           {/* ── Secondary reviews stacked ── */}
-          <div className="flex flex-col gap-4 md:gap-6">
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            className="flex flex-col gap-4 md:gap-6"
+          >
             {secondary.map((review, index) => (
-              <article
+              <motion.article
                 key={index}
-                className={`relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-700 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}
-                style={{ transitionDelay: `${(index + 2) * 100}ms` }}
+                variants={staggerItem}
+                whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+                className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5"
               >
                 <div className="flex h-full flex-col justify-between p-6">
                   <div>
@@ -150,9 +141,9 @@ export function Reviews() {
                     <p className="text-xs text-white/40">{review.location}</p>
                   </footer>
                 </div>
-              </article>
+              </motion.article>
             ))}
-          </div>
+          </motion.div>
 
         </div>
       </div>
