@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Geist } from 'next/font/google'
+import { Inter, Geist, Instrument_Serif } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
@@ -12,6 +12,14 @@ const inter = Inter({
 const geist = Geist({
   subsets: ['latin'],
   variable: '--font-geist',
+  display: 'swap',
+})
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-instrument-serif',
   display: 'swap',
 })
 
@@ -167,7 +175,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${geist.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${geist.variable} ${instrumentSerif.variable} font-sans antialiased`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
