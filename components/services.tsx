@@ -2,6 +2,7 @@
 
 import { Wifi, Camera, BellRing, MessageCircle, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { fadeUp, slideLeft, stagger, staggerItem, ease, VIEWPORT } from '@/lib/animations'
 
 export function Services() {
@@ -39,35 +40,46 @@ export function Services() {
         {/* Asymmetric grid: big card left + two stacked right */}
         <div className="grid gap-4 md:grid-cols-[3fr_2fr] md:gap-6">
 
-          {/* ── Primary: Beveiligingscamera's (large card) ── */}
+          {/* ── Primary: Beveiligingscamera's (photo card) ── */}
           <motion.div
             variants={slideLeft}
             initial="hidden"
             whileInView="visible"
             viewport={VIEWPORT}
-            className="group relative overflow-hidden rounded-2xl"
+            className="group relative min-h-[340px] overflow-hidden rounded-2xl md:min-h-[420px]"
           >
-            {/* Dark background */}
+            {/* Camera2 photo background */}
+            <Image
+              src="/cameras/Camera2.png"
+              alt="Beveiligingscamera van Addendum Networks & Security geïnstalleerd op een muur"
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              sizes="(max-width: 768px) 100vw, 60vw"
+            />
+
+            {/* Dark gradient overlay — bottom heavy so text is readable */}
             <div
               className="absolute inset-0"
-              style={{ background: 'linear-gradient(135deg, #091729 0%, #1E3A5F 60%, #0e2240 100%)' }}
+              style={{
+                background: 'linear-gradient(160deg, rgba(9,23,41,0.45) 0%, rgba(9,23,41,0.6) 40%, rgba(9,23,41,0.92) 100%)',
+              }}
             />
-            {/* Dot pattern */}
+
+            {/* Dot pattern on overlay */}
             <div className="absolute inset-0 dot-pattern" aria-hidden="true" />
-            {/* Cyan glow */}
+
+            {/* Cyan glow — bottom right */}
             <div
-              className="absolute -bottom-16 -right-16 h-64 w-64 rounded-full blur-3xl transition-opacity duration-500 group-hover:opacity-100"
-              style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.2) 0%, transparent 70%)', opacity: 0.6 }}
+              className="absolute -bottom-16 -right-16 h-64 w-64 rounded-full blur-3xl opacity-50 transition-opacity duration-500 group-hover:opacity-80"
+              style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.25) 0%, transparent 70%)' }}
               aria-hidden="true"
             />
-            {/* Decorative rings */}
-            <div className="absolute right-8 top-8 h-32 w-32 rounded-full border border-white/[0.06]" aria-hidden="true" />
-            <div className="absolute right-2 top-2 h-48 w-48 rounded-full border border-white/[0.04]" aria-hidden="true" />
 
-            <div className="relative flex h-full min-h-[320px] flex-col justify-between p-8 md:min-h-[380px] md:p-10">
+            {/* Content */}
+            <div className="relative flex h-full flex-col justify-between p-8 md:p-10">
               {/* Icon */}
               <motion.div
-                className="flex h-14 w-14 items-center justify-center rounded-xl border border-brand-cyan/30 bg-brand-cyan/10"
+                className="flex h-14 w-14 items-center justify-center rounded-xl border border-brand-cyan/30 bg-brand-cyan/10 backdrop-blur-sm"
                 whileHover={{ scale: 1.08 }}
                 transition={{ duration: 0.2 }}
               >
@@ -75,7 +87,7 @@ export function Services() {
               </motion.div>
 
               <div>
-                <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand-cyan/70">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand-cyan/80">
                   Kernservice
                 </p>
                 <h3
@@ -84,7 +96,7 @@ export function Services() {
                 >
                   Beveiligingscamera&apos;s
                 </h3>
-                <p className="mt-3 max-w-sm text-base leading-relaxed text-white/60">
+                <p className="mt-3 max-w-sm text-base leading-relaxed text-white/65">
                   Vakkundige montage en configuratie van camera&apos;s, afgestemd op uw situatie. Inclusief uitleg over bediening.
                 </p>
                 <a
@@ -117,7 +129,7 @@ export function Services() {
             >
               <div
                 className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                style={{ background: 'radial-gradient(ellipse at top right, rgba(6,182,212,0.05) 0%, transparent 60%)' }}
+                style={{ background: 'radial-gradient(ellipse at top right, rgba(6,182,212,0.06) 0%, transparent 60%)' }}
                 aria-hidden="true"
               />
               <div className="relative flex flex-col p-6 md:p-8">
@@ -152,7 +164,7 @@ export function Services() {
             >
               <div
                 className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                style={{ background: 'radial-gradient(ellipse at top right, rgba(6,182,212,0.05) 0%, transparent 60%)' }}
+                style={{ background: 'radial-gradient(ellipse at top right, rgba(6,182,212,0.06) 0%, transparent 60%)' }}
                 aria-hidden="true"
               />
               <div className="relative flex flex-col p-6 md:p-8">

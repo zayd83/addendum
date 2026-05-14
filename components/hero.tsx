@@ -1,53 +1,70 @@
 'use client'
 
-import { MessageCircle, ChevronDown, Shield, Wifi, Video, Bell, Radio } from 'lucide-react'
+import { MessageCircle, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { fadeUp, slideRight, ease, VIEWPORT } from '@/lib/animations'
+import { useRef, useEffect, useState } from 'react'
+import Image from 'next/image'
+import { fadeUp, ease, VIEWPORT } from '@/lib/animations'
 
-const badges = [
-  { label: 'WiFi Actief',    icon: Wifi,   pos: 'top-4 left-4',     delay: '0.5s' },
-  { label: 'Camera Online',  icon: Video,  pos: 'top-4 right-4',    delay: '0.7s' },
-  { label: 'Alarm Bewaakt',  icon: Bell,   pos: 'bottom-4 left-4',  delay: '0.9s' },
-  { label: 'Verbonden',      icon: Radio,  pos: 'bottom-4 right-4', delay: '1.1s' },
-]
+function LiveTimestamp() {
+  const [time, setTime] = useState('')
+
+  useEffect(() => {
+    const update = () =>
+      setTime(
+        new Date().toLocaleTimeString('nl-NL', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        })
+      )
+    update()
+    const id = setInterval(update, 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  return (
+    <span className="font-mono-brand text-[10px] tracking-widest text-white/60">
+      {time}
+    </span>
+  )
+}
 
 export function Hero() {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const badgesVisible = useInView(cardRef, { once: true, margin: '-40px' })
+  const frameRef = useRef<HTMLDivElement>(null)
+  const frameInView = useInView(frameRef, { once: true, margin: '-60px' })
 
   return (
     <>
       <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50%       { transform: translateY(-12px); }
-        }
         @keyframes badge-in {
-          from { opacity: 0; transform: translateY(8px) scale(0.96); }
+          from { opacity: 0; transform: translateY(6px) scale(0.95); }
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        .badge-animate { opacity: 0; animation: badge-in 0.45s ease forwards; }
+        .badge-animate { opacity: 0; animation: badge-in 0.4s ease forwards; }
+        @keyframes scanline {
+          0%   { transform: translateY(0); }
+          100% { transform: translateY(4px); }
+        }
       `}</style>
 
       <section
-        className="relative overflow-hidden bg-warm-white py-16 md:py-20 lg:py-28"
+        className="relative overflow-hidden bg-warm-white py-12 md:py-16 lg:py-20"
         aria-labelledby="hero-heading"
       >
         {/* Fine grid overlay */}
         <div className="pointer-events-none absolute inset-0 grid-pattern" aria-hidden="true" />
 
-        {/* Top-left radial glow */}
+        {/* Ambient left glow */}
         <div
-          className="pointer-events-none absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full blur-3xl"
-          style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.07) 0%, transparent 70%)' }}
+          className="pointer-events-none absolute -left-40 -top-40 h-[700px] w-[700px] rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 70%)' }}
           aria-hidden="true"
         />
 
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-[3fr_2fr] lg:gap-20">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
 
             {/* ── Left: Content ── */}
             <motion.div
@@ -58,7 +75,7 @@ export function Hero() {
               className="flex flex-col items-start"
             >
               {/* Status badge */}
-              <div className="mb-6 flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 shadow-sm">
+              <div className="mb-6 flex items-center gap-2.5 rounded-full border border-border bg-white px-3.5 py-1.5 shadow-sm">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
@@ -71,11 +88,14 @@ export function Hero() {
               {/* Headline */}
               <h1
                 id="hero-heading"
-                className="font-heading text-balance text-5xl font-bold leading-[1.08] text-midnight md:text-6xl lg:text-7xl"
+                className="font-heading text-balance text-5xl font-bold leading-[1.07] text-midnight md:text-6xl lg:text-7xl"
                 style={{ letterSpacing: '-0.03em' }}
               >
                 Altijd snel internet en{' '}
-                <span className="font-display italic text-brand-cyan" style={{ letterSpacing: '-0.01em' }}>
+                <span
+                  className="font-display italic text-brand-cyan"
+                  style={{ letterSpacing: '-0.01em' }}
+                >
                   maximale beveiliging
                 </span>
                 .
@@ -86,7 +106,7 @@ export function Hero() {
               </p>
 
               {/* CTAs */}
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Button
                     asChild
@@ -125,81 +145,144 @@ export function Hero() {
               </div>
             </motion.div>
 
-            {/* ── Right: Camera card ── */}
+            {/* ── Right: Camera monitoring frame ── */}
             <motion.div
-              ref={cardRef}
-              variants={slideRight}
-              initial="hidden"
-              whileInView="visible"
+              ref={frameRef}
+              initial={{ opacity: 0, scale: 0.97, y: 16 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={VIEWPORT}
-              className="relative flex items-center justify-center"
+              transition={{ duration: 0.7, ease }}
+              className="relative pb-6"
             >
               {/* Outer ambient glow */}
               <div
-                className="absolute inset-4 -z-10 rounded-3xl blur-3xl"
-                style={{ background: 'radial-gradient(ellipse at center, rgba(6,182,212,0.18) 0%, transparent 70%)' }}
+                className="absolute -inset-4 -z-10 rounded-3xl blur-3xl"
+                style={{ background: 'radial-gradient(ellipse at center, rgba(6,182,212,0.15) 0%, transparent 70%)' }}
                 aria-hidden="true"
               />
 
-              {/* Floating wrapper */}
-              <div className="animate-float w-full">
-                {/* Dark card */}
-                <div
-                  className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-3xl"
-                  style={{ background: 'linear-gradient(135deg, #091729 0%, #1E3A5F 55%, #0e2240 100%)' }}
-                >
-                  {/* Inner cyan glow */}
+              {/* Camera monitoring frame */}
+              <div className="relative overflow-hidden rounded-2xl border border-midnight/40 shadow-[0_0_0_1px_rgba(6,182,212,0.15),0_32px_64px_rgba(9,23,41,0.3)]">
+
+                {/* ─ Top HUD bar ─ */}
+                <div className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between bg-gradient-to-b from-midnight/95 via-midnight/70 to-transparent px-4 py-3">
+                  {/* REC indicator */}
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-80" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                    </span>
+                    <span className="font-mono-brand text-[10px] font-bold tracking-[0.25em] text-white">
+                      REC
+                    </span>
+                  </div>
+                  {/* Camera name */}
+                  <span className="font-mono-brand text-[10px] tracking-widest text-white/55">
+                    CAM-01 · ADDENDUM
+                  </span>
+                  {/* LIVE badge */}
+                  <span className="rounded border border-brand-cyan/50 px-2 py-0.5 font-mono-brand text-[10px] font-semibold tracking-widest text-brand-cyan">
+                    LIVE
+                  </span>
+                </div>
+
+                {/* ─ Camera image ─ */}
+                <div className="relative aspect-[4/3] w-full">
+                  <Image
+                    src="/cameras/Camera3.png"
+                    alt="Beveiligingscamera van Addendum Networks & Security, professioneel geïnstalleerd op een gevelmuur"
+                    fill
+                    priority
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+
+                  {/* Vignette overlay */}
                   <div
-                    className="absolute inset-0"
-                    style={{ background: 'radial-gradient(ellipse at 30% 70%, rgba(6,182,212,0.18) 0%, transparent 60%)' }}
+                    className="pointer-events-none absolute inset-0 z-10"
+                    style={{ background: 'radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(9,23,41,0.55) 100%)' }}
                     aria-hidden="true"
                   />
 
-                  {/* Subtle grid on card */}
+                  {/* Scanlines */}
                   <div
-                    className="absolute inset-0 opacity-[0.05]"
+                    className="pointer-events-none absolute inset-0 z-10"
                     style={{
-                      backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
-                      backgroundSize: '32px 32px',
+                      backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px)',
                     }}
                     aria-hidden="true"
                   />
 
-                  {/* Shield icon — background */}
-                  <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
-                    <Shield className="h-36 w-36 text-white/[0.07]" strokeWidth={1} />
-                  </div>
+                  {/* Subtle cyan tint */}
+                  <div
+                    className="pointer-events-none absolute inset-0 z-10"
+                    style={{ background: 'rgba(6,182,212,0.04)' }}
+                    aria-hidden="true"
+                  />
 
-                  {/* Cyan ring accents */}
-                  <div className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-cyan/20" aria-hidden="true" />
-                  <div className="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-cyan/10" aria-hidden="true" />
+                  {/* Corner targeting brackets */}
+                  <div aria-hidden="true" className="absolute left-3 top-[52px] z-20 h-5 w-5 border-l-2 border-t-2 border-brand-cyan/70" />
+                  <div aria-hidden="true" className="absolute right-3 top-[52px] z-20 h-5 w-5 border-r-2 border-t-2 border-brand-cyan/70" />
+                  <div aria-hidden="true" className="absolute bottom-[52px] left-3 z-20 h-5 w-5 border-b-2 border-l-2 border-brand-cyan/70" />
+                  <div aria-hidden="true" className="absolute bottom-[52px] right-3 z-20 h-5 w-5 border-b-2 border-r-2 border-brand-cyan/70" />
 
-                  {/* Status badges — appear after card is in view */}
-                  {badgesVisible && badges.map(({ label, icon: Icon, pos, delay }) => (
+                  {/* ─ PiP: Camera1 (second channel) ─ */}
+                  {frameInView && (
                     <div
-                      key={label}
-                      className={`badge-animate absolute ${pos} flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-sm`}
-                      style={{ animationDelay: delay }}
+                      className="badge-animate absolute right-3 top-[60px] z-30 overflow-hidden rounded-lg border border-white/20 shadow-xl"
+                      style={{ width: 88, height: 66, animationDelay: '0.8s' }}
                     >
-                      <span className="relative flex h-1.5 w-1.5">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-cyan opacity-75" />
-                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-cyan" />
-                      </span>
-                      <Icon className="h-3 w-3 text-white/60" strokeWidth={1.5} />
-                      <span className="text-[11px] font-medium text-white">{label}</span>
+                      <Image
+                        src="/cameras/Camera1.png"
+                        alt="Camera kanaal 2"
+                        fill
+                        className="object-cover"
+                        sizes="88px"
+                      />
+                      {/* PiP overlay */}
+                      <div
+                        className="absolute inset-0 z-10"
+                        style={{ background: 'rgba(9,23,41,0.25)' }}
+                        aria-hidden="true"
+                      />
+                      <div className="absolute bottom-1 left-0 right-0 z-20 text-center font-mono-brand text-[8px] tracking-widest text-white/80">
+                        CAM-02
+                      </div>
                     </div>
-                  ))}
+                  )}
+                </div>
 
-                  {/* Bottom label */}
-                  <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
-                    <p className="text-[11px] font-medium uppercase tracking-widest text-brand-cyan">
-                      Systeem Actief
-                    </p>
-                    <p className="mt-0.5 text-xs text-white/50">Alle systemen operationeel</p>
+                {/* ─ Bottom HUD bar ─ */}
+                <div className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-between bg-gradient-to-t from-midnight/95 via-midnight/70 to-transparent px-4 py-3">
+                  <LiveTimestamp />
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand-cyan" aria-hidden="true" />
+                    <span className="font-mono-brand text-[10px] tracking-widest text-white/50">
+                      ZONE A · BEVEILIGD
+                    </span>
                   </div>
                 </div>
-              </div>
-            </motion.div>
+
+              </div>{/* /camera frame */}
+
+              {/* Floating status badge below frame */}
+              {frameInView && (
+                <div
+                  className="badge-animate absolute -bottom-4 left-6 z-30 flex items-center gap-2.5 rounded-xl border border-border bg-warm-white px-4 py-2.5 shadow-xl"
+                  style={{ animationDelay: '1s' }}
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                  </span>
+                  <div>
+                    <p className="text-xs font-semibold text-midnight">Systeem actief</p>
+                    <p className="text-[10px] text-muted-foreground">Alle camera&apos;s operationeel</p>
+                  </div>
+                </div>
+              )}
+
+            </motion.div>{/* /right panel */}
 
           </div>
         </div>

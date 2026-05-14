@@ -24,6 +24,7 @@ const instrumentSerif = Instrument_Serif({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://addendum.nl'),
   title: 'Addendum Networks & Security | Camera, Alarm en WiFi installatie in Gelderland',
   description: 'Professionele installatie van beveiligingscamera\'s, alarmsystemen en WiFi-netwerken voor woningen en bedrijven in Nijmegen, Arnhem en heel Gelderland. Direct contact via WhatsApp.',
   keywords: 'camera installatie Nijmegen, beveiligingscamera Gelderland, alarmsysteem installatie, WiFi installatie bedrijven, access point installatie, netwerk installatie, beveiliging thuis, beveiliging bedrijf',
