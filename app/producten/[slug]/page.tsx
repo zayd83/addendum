@@ -27,7 +27,7 @@ export async function generateMetadata({
 
   return {
     title: `${product.name} — Addendum Networks & Security`,
-    description: `${product.shortDescription} Professionele installatie in Nijmegen, Arnhem en heel Gelderland. Direct te bestellen via Addendum.`,
+    description: `${product.shortDescription} Professionele installatie in Zuid-Holland en heel Nederland. Direct te bestellen via Addendum.`,
     openGraph: {
       title: `${product.name} — Addendum Networks & Security`,
       description: product.shortDescription,
@@ -46,7 +46,7 @@ const categoryLabel: Record<string, string> = {
 /* ─── Trust badges ─── */
 const trustItems = [
   { icon: ShieldCheck, label: 'Professionele installatie mogelijk' },
-  { icon: Truck,       label: 'Oom regelt levering na betaling' },
+  { icon: Truck,       label: 'Levering & installatie op afspraak' },
   { icon: Clock,       label: 'Reactie binnen 24 uur' },
 ]
 
@@ -331,8 +331,8 @@ export default async function ProductPage({
                     body: 'Wij werken uitsluitend met bewezen merken: Ajax, Dahua en Hikvision. Betrouwbaar en toekomstbestendig.',
                   },
                   {
-                    title: 'Lokaal in Gelderland',
-                    body: 'Gevestigd in de regio Nijmegen-Arnhem. Snel ter plaatse, u kent het gezicht achter het bedrijf.',
+                    title: 'Actief door heel Nederland',
+                    body: 'Werkzaam in Zuid-Holland en omgeving, maar ook bereikbaar voor installaties door heel Nederland. Snel ter plaatse, u kent het gezicht achter het bedrijf.',
                   },
                 ].map(({ title, body }) => (
                   <div key={title} className="flex gap-4">

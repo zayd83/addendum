@@ -140,7 +140,7 @@ export function Hero() {
                   ))}
                 </div>
                 <span className="text-sm text-muted-foreground">
-                  Beoordeeld door klanten in heel Gelderland
+                  Beoordeeld door klanten door heel Nederland
                 </span>
               </div>
             </motion.div>

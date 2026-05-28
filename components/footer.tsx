@@ -46,7 +46,7 @@ export function Footer() {
               </div>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/40">
-              Professionele installatie van camera&apos;s, alarmsystemen en WiFi-netwerken in Gelderland.
+              Professionele installatie van camera&apos;s, alarmsystemen en WiFi-netwerken in heel Nederland.
             </p>
           </div>
 

@@ -78,7 +78,7 @@ export function ContactCta() {
         {/* Trust badge */}
         <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/50 backdrop-blur-sm">
           <MapPin className="h-3.5 w-3.5 text-brand-cyan" />
-          Werkgebied: Nijmegen, Arnhem en heel Gelderland
+          Werkgebied: Rotterdam, Den Haag en heel Nederland
         </div>
       </motion.div>
     </section>

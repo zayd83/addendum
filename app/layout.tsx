@@ -25,9 +25,9 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://addendum.nl'),
-  title: 'Addendum Networks & Security | Camera, Alarm en WiFi installatie in Gelderland',
-  description: 'Professionele installatie van beveiligingscamera\'s, alarmsystemen en WiFi-netwerken voor woningen en bedrijven in Nijmegen, Arnhem en heel Gelderland. Direct contact via WhatsApp.',
-  keywords: 'camera installatie Nijmegen, beveiligingscamera Gelderland, alarmsysteem installatie, WiFi installatie bedrijven, access point installatie, netwerk installatie, beveiliging thuis, beveiliging bedrijf',
+  title: 'Addendum Networks & Security | Camera, Alarm en WiFi installatie in Zuid-Holland',
+  description: 'Professionele installatie van beveiligingscamera\'s, alarmsystemen en WiFi-netwerken voor woningen en bedrijven in Zuid-Holland en heel Nederland. Direct contact via WhatsApp.',
+  keywords: 'camera installatie Rotterdam, beveiligingscamera Zuid-Holland, alarmsysteem installatie, WiFi installatie bedrijven, access point installatie, netwerk installatie, beveiliging thuis, beveiliging bedrijf, camera installatie Nederland',
   authors: [{ name: 'Addendum Networks & Security' }],
   creator: 'Addendum Networks & Security',
   publisher: 'Addendum Networks & Security',
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
     email: true,
   },
   openGraph: {
-    title: 'Addendum Networks & Security | Camera, Alarm en WiFi installatie in Gelderland',
-    description: 'Professionele installatie van beveiligingscamera\'s, alarmsystemen en WiFi-netwerken voor woningen en bedrijven in Nijmegen, Arnhem en heel Gelderland.',
+    title: 'Addendum Networks & Security | Camera, Alarm en WiFi installatie in Zuid-Holland',
+    description: 'Professionele installatie van beveiligingscamera\'s, alarmsystemen en WiFi-netwerken voor woningen en bedrijven in Zuid-Holland en heel Nederland.',
     locale: 'nl_NL',
     type: 'website',
     siteName: 'Addendum Networks & Security',
@@ -52,8 +52,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Addendum Networks & Security | Camera, Alarm en WiFi installatie in Gelderland',
-    description: 'Professionele installatie van beveiligingscamera\'s, alarmsystemen en WiFi-netwerken voor woningen en bedrijven in Nijmegen, Arnhem en heel Gelderland.',
+    title: 'Addendum Networks & Security | Camera, Alarm en WiFi installatie in Zuid-Holland',
+    description: 'Professionele installatie van beveiligingscamera\'s, alarmsystemen en WiFi-netwerken voor woningen en bedrijven in Zuid-Holland en heel Nederland.',
     images: ['/og-image.jpg'],
   },
   robots: {
@@ -101,23 +101,19 @@ const jsonLd = {
   telephone: '+31624782834',
   url: 'https://addendum.nl',
   areaServed: {
-    '@type': 'State',
-    name: 'Gelderland',
-    containedInPlace: {
-      '@type': 'Country',
-      name: 'Netherlands',
-    },
+    '@type': 'Country',
+    name: 'Netherlands',
   },
   priceRange: '$$',
   address: {
     '@type': 'PostalAddress',
-    addressRegion: 'Gelderland',
+    addressRegion: 'Zuid-Holland',
     addressCountry: 'NL',
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: 51.8126,
-    longitude: 5.8372,
+    latitude: 51.9225,
+    longitude: 4.4792,
   },
   openingHoursSpecification: [
     {
