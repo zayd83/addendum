@@ -2,6 +2,7 @@ import { Header } from '@/components/header'
 import { Hero } from '@/components/hero'
 import { UspStrip } from '@/components/usp-strip'
 import { Services } from '@/components/services'
+import { CameraShowcase } from '@/components/camera-showcase'
 import { Products } from '@/components/products'
 import { Process } from '@/components/process'
 import { Reviews } from '@/components/reviews'
@@ -17,6 +18,7 @@ export default function Home() {
         <Hero />
         <UspStrip />
         <Services />
+        <CameraShowcase />
         <Products />
         <Process />
         <Reviews />
