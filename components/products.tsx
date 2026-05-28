@@ -1,49 +1,12 @@
 'use client'
 
-import { MessageCircle } from 'lucide-react'
+import { MessageCircle, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { fadeUp, staggerFast, staggerItem, ease, VIEWPORT } from '@/lib/animations'
-
-const products = [
-  {
-    name: 'Ajax Hub 2 Beveiligingspakket',
-    price: 370,
-    description: 'Compleet draadloos alarmsysteem voor woningen en bedrijven.',
-    image: '/products/ajax-hub-2.png',
-    alt: 'Ajax Hub 2 draadloos alarmsysteem voor woningen en bedrijven',
-    badge: 'Bestseller',
-    featured: true,
-  },
-  {
-    name: 'Dahua IPC-HDW2849TM-2-IL',
-    price: 180,
-    description: '8MP full-color camera met nachtzicht en bewegingsdetectie.',
-    image: '/products/dahua-hdw2849.png',
-    alt: 'Dahua IPC-HDW2849TM-2-IL beveiligingscamera met nachtzicht',
-    badge: null,
-    featured: false,
-  },
-  {
-    name: 'Dahua IPC-PDW3849P 180° Duallens',
-    price: 190,
-    description: '8MP TiOC Eyeball camera met 180° dubbele lens.',
-    image: '/products/dahua-pdw3849.png',
-    alt: 'Dahua IPC-PDW3849P beveiligingscamera met 180 graden duallens',
-    badge: null,
-    featured: false,
-  },
-  {
-    name: 'Hikvision DS-2CD2343G2-IU 4MP',
-    price: 180,
-    description: '4MP Turret IP Camera met 2.8mm lens en ingebouwde microfoon.',
-    image: '/products/hikvision-ds2cd2343.png',
-    alt: 'Hikvision DS-2CD2343G2-IU 4MP beveiligingscamera met microfoon',
-    badge: 'Populair',
-    featured: false,
-  },
-]
+import { products } from '@/lib/products'
 
 export function Products() {
   return (
@@ -83,7 +46,7 @@ export function Products() {
             Onze producten
           </h2>
           <p className="mt-3 max-w-md text-lg text-white/60">
-            Hoogwaardige camera&apos;s en alarmsystemen — bestel eenvoudig via WhatsApp.
+            Hoogwaardige camera&apos;s en alarmsystemen — bestel eenvoudig online of via WhatsApp.
           </p>
         </motion.div>
 
@@ -95,17 +58,14 @@ export function Products() {
           viewport={VIEWPORT}
           className="grid gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-4"
         >
-          {products.map((product, index) => {
-            const whatsappMessage = encodeURIComponent(`Hallo, ik heb interesse in de ${product.name}`)
-            const whatsappUrl = `https://wa.me/31624782834?text=${whatsappMessage}`
-
-            return (
-              <motion.article
-                key={index}
-                variants={staggerItem}
-                whileHover={{ y: -6, transition: { duration: 0.2, ease } }}
-                className={product.featured ? 'sm:col-span-2 lg:col-span-1' : ''}
-              >
+          {products.map((product, index) => (
+            <motion.article
+              key={product.slug}
+              variants={staggerItem}
+              whileHover={{ y: -6, transition: { duration: 0.2, ease } }}
+              className={product.featured ? 'sm:col-span-2 lg:col-span-1' : ''}
+            >
+              <Link href={`/producten/${product.slug}`} className="block h-full">
                 <div
                   className={`relative h-full overflow-hidden rounded-2xl border transition-shadow duration-300 ${
                     product.featured
@@ -128,11 +88,6 @@ export function Products() {
 
                   {/* Product image */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden bg-white/5">
-                    <div
-                      className="absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                      style={{ background: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)' }}
-                      aria-hidden="true"
-                    />
                     <Image
                       src={product.image}
                       alt={product.alt}
@@ -152,34 +107,38 @@ export function Products() {
                       {product.name}
                     </h3>
                     <p className="mt-2 text-xs leading-relaxed text-white/50">
-                      {product.description}
+                      {product.shortDescription}
                     </p>
                     <p
                       className={`mt-4 font-mono-brand text-2xl font-bold tracking-tight ${
                         product.featured ? 'text-brand-cyan' : 'text-white'
                       }`}
                     >
-                      €{product.price}
+                      €{product.priceEuros}
                     </p>
 
-                    <Button
-                      asChild
-                      className={`mt-4 w-full gap-2 text-sm font-semibold transition-all duration-200 ${
-                        product.featured
-                          ? 'bg-brand-cyan text-midnight hover:bg-brand-cyan-bright'
-                          : 'border border-white/20 bg-white/10 text-white hover:bg-white/20'
-                      }`}
+                    {/* Primary CTA → product page */}
+                    <div className="mt-4 flex items-center gap-2 rounded-xl bg-brand-cyan px-4 py-2.5 text-sm font-semibold text-midnight transition-colors hover:bg-brand-cyan-bright">
+                      <span className="flex-1">Bekijk &amp; bestel</span>
+                      <ArrowRight className="h-4 w-4 shrink-0" />
+                    </div>
+
+                    {/* Secondary: WhatsApp */}
+                    <a
+                      href={`https://wa.me/31624782834?text=${encodeURIComponent(`Hallo, ik heb interesse in de ${product.name}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="mt-2 flex items-center justify-center gap-1.5 text-xs text-white/40 transition-colors hover:text-white/70"
                     >
-                      <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                        <MessageCircle className="h-4 w-4" />
-                        Bestel via WhatsApp
-                      </a>
-                    </Button>
+                      <MessageCircle className="h-3.5 w-3.5" />
+                      Vraag via WhatsApp
+                    </a>
                   </div>
                 </div>
-              </motion.article>
-            )
-          })}
+              </Link>
+            </motion.article>
+          ))}
         </motion.div>
       </div>
     </section>
