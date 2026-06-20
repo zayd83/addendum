@@ -5,6 +5,7 @@ import { Services } from '@/components/services'
 import { CameraShowcase } from '@/components/camera-showcase'
 import { Products } from '@/components/products'
 import { Process } from '@/components/process'
+import { About } from '@/components/about'
 import { Reviews } from '@/components/reviews'
 import { ContactCta } from '@/components/contact-cta'
 import { Footer } from '@/components/footer'
@@ -21,6 +22,7 @@ export default function Home() {
         <CameraShowcase />
         <Products />
         <Process />
+        <About />
         <Reviews />
         <ContactCta />
       </main>

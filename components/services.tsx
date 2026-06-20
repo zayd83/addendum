@@ -48,12 +48,12 @@ export function Services() {
             viewport={VIEWPORT}
             className="group relative min-h-[340px] overflow-hidden rounded-2xl md:min-h-[420px]"
           >
-            {/* Camera2 photo background */}
+            {/* Installation action photo background */}
             <Image
-              src="/cameras/Camera2.png"
-              alt="Beveiligingscamera van Addendum Networks & Security geïnstalleerd op een muur"
+              src="/team/installatie-b.jpeg"
+              alt="Addendum Networks & Security installateur bezig met beveiligingscamera montage"
               fill
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
               sizes="(max-width: 768px) 100vw, 60vw"
             />
 
